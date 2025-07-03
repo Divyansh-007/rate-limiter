@@ -28,6 +28,26 @@ describe("ExpressRateLimiterMiddleware", () => {
   });
 
   it("should allow requests within the limit", async () => {
+    // Mock the service's checkLimit method
+    jest
+      .spyOn((rateLimiter as any).service, "checkLimit")
+      .mockResolvedValueOnce({
+        allowed: true,
+        current: 1,
+        limit: 2,
+        windowMs: 60,
+        resetTime: new Date(Date.now() + 60000).toISOString(),
+        remaining: 1,
+      })
+      .mockResolvedValueOnce({
+        allowed: true,
+        current: 2,
+        limit: 2,
+        windowMs: 60,
+        resetTime: new Date(Date.now() + 60000).toISOString(),
+        remaining: 0,
+      });
+
     const res1 = await request(app).get("/test");
     expect(res1.status).toBe(200);
     expect(res1.body.ok).toBe(true);
@@ -42,6 +62,34 @@ describe("ExpressRateLimiterMiddleware", () => {
   });
 
   it("should block requests after the limit", async () => {
+    // Mock the service's checkLimit method
+    jest
+      .spyOn((rateLimiter as any).service, "checkLimit")
+      .mockResolvedValueOnce({
+        allowed: true,
+        current: 1,
+        limit: 2,
+        windowMs: 60,
+        resetTime: new Date(Date.now() + 60000).toISOString(),
+        remaining: 1,
+      })
+      .mockResolvedValueOnce({
+        allowed: true,
+        current: 2,
+        limit: 2,
+        windowMs: 60,
+        resetTime: new Date(Date.now() + 60000).toISOString(),
+        remaining: 0,
+      })
+      .mockResolvedValueOnce({
+        allowed: false,
+        current: 3,
+        limit: 2,
+        windowMs: 60,
+        resetTime: new Date(Date.now() + 60000).toISOString(),
+        remaining: 0,
+      });
+
     await request(app).get("/test");
     await request(app).get("/test");
     const res3 = await request(app).get("/test");
