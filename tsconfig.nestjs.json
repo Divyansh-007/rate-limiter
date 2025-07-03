@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/nestjs"
+  },
+  "include": ["src/guards/**/*", "src/interceptors/**/*", "src/nestjs/**/*"],
+  "exclude": ["node_modules", "dist", "tests", "**/*.test.ts"]
+}
