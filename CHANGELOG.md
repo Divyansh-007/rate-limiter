@@ -5,6 +5,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2024-01-03
+
+### Added
+
+- **Redis Support**: Added Redis as an alternative cache provider alongside MongoDB
+- **Cache Provider Interface**: Abstract cache provider interface for extensible storage backends
+- **MongoDBCacheProvider**: MongoDB-specific cache provider implementation
+- **RedisCacheProvider**: Redis-specific cache provider implementation
+- **Flexible Configuration**: Users can now choose between MongoDB and Redis for rate limiting storage
+- **Redis Dependencies**: Added Redis client dependency for Redis support
+
+### Changed
+
+- **Breaking Change**: Updated configuration interface to use `cacheProvider` object instead of direct MongoDB configuration
+- **Configuration Structure**: Rate limiter now requires `cacheProvider.type` to specify backend ('mongodb' or 'redis')
+- **MongoDB Configuration**: MongoDB URL is now specified in `cacheProvider.mongoUrl`
+- **Redis Configuration**: Redis URL is specified in `cacheProvider.redisUrl`
+- **Examples Updated**: All examples now demonstrate both MongoDB and Redis usage
+
+### Features
+
+- **Dual Backend Support**: Choose between MongoDB and Redis based on your needs
+- **High Performance**: Redis provides sub-millisecond response times for high-traffic applications
+- **Distributed Rate Limiting**: Redis enables distributed rate limiting across multiple application instances
+- **Automatic Cleanup**: Both backends support automatic cleanup of expired rate limit records
+- **Backward Compatibility**: Existing MongoDB functionality preserved with new configuration structure
+
+### Technical Details
+
+- Redis uses hash structures with automatic key expiration
+- MongoDB continues to use TTL indexes for cleanup
+- Cache providers are pluggable and follow a common interface
+- Both backends provide the same API and behavior
+
 ## [1.0.0] - 2024-01-03
 
 ### Added

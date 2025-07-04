@@ -1,10 +1,19 @@
 import { Request, Response, NextFunction } from "express";
 
 export interface RateLimiterConfig {
-  /** MongoDB connection URL */
-  mongoUrl: string;
-  /** Collection name for storing rate limiting logs (default: 'rateLimitingLogs') */
-  collectionName?: string;
+  /** Cache provider configuration */
+  cacheProvider: {
+    /** Type of cache provider to use */
+    type: "mongodb" | "redis";
+    /** MongoDB connection URL (required when type is 'mongodb') */
+    mongoUrl?: string;
+    /** Redis connection URL (required when type is 'redis') */
+    redisUrl?: string;
+    /** Collection name for MongoDB (default: 'rateLimitingLogs') */
+    collectionName?: string;
+    /** Redis key prefix (default: 'rate_limit:') */
+    redisKeyPrefix?: string;
+  };
   /** Maximum number of requests allowed in the time window */
   maxRequests: number;
   /** Time window in seconds */

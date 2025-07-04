@@ -10,10 +10,13 @@ describe("NestJSRateLimiterGuard", () => {
 
   beforeEach(() => {
     guard = new NestJSRateLimiterGuard({
-      mongoUrl: "mongodb://localhost:27017/test-rate-limiter-nestjs",
+      cacheProvider: {
+        type: "mongodb",
+        mongoUrl: "mongodb://localhost:27017/test-rate-limiter-nestjs",
+        collectionName: "testRateLimitingLogsNest",
+      },
       maxRequests: 2,
       windowMs: 60,
-      collectionName: "testRateLimitingLogsNest",
     });
     req = { ip: "1.2.3.4", connection: { remoteAddress: "1.2.3.4" } };
     mockContext = {
@@ -98,10 +101,13 @@ describe("NestJSRateLimiterInterceptor", () => {
 
   beforeEach(() => {
     interceptor = new NestJSRateLimiterInterceptor({
-      mongoUrl: "mongodb://localhost:27017/test-rate-limiter-nestjs",
+      cacheProvider: {
+        type: "mongodb",
+        mongoUrl: "mongodb://localhost:27017/test-rate-limiter-nestjs",
+        collectionName: "testRateLimitingLogsNest",
+      },
       maxRequests: 2,
       windowMs: 60,
-      collectionName: "testRateLimitingLogsNest",
     });
     req = { ip: "5.6.7.8", connection: { remoteAddress: "5.6.7.8" } };
     mockContext = {

@@ -4,16 +4,37 @@ import { ExpressRateLimiterMiddleware } from "../src/middleware/express-rate-lim
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Create rate limiter instance
-const rateLimiter = new ExpressRateLimiterMiddleware({
-  mongoUrl:
-    process.env.MONGO_URL || "mongodb://localhost:27017/rate-limiter-example",
+// Create rate limiter instance with MongoDB
+const rateLimiterMongo = new ExpressRateLimiterMiddleware({
+  cacheProvider: {
+    type: "mongodb",
+    mongoUrl:
+      process.env.MONGO_URL || "mongodb://localhost:27017/rate-limiter-example",
+    collectionName: "rateLimitingLogs",
+  },
   maxRequests: 5, // Allow 5 requests
   windowMs: 60, // per 60 seconds
   includeHeaders: true,
   errorMessage: "Rate limit exceeded. Please try again later.",
   statusCode: 429,
 });
+
+// Create rate limiter instance with Redis
+const rateLimiterRedis = new ExpressRateLimiterMiddleware({
+  cacheProvider: {
+    type: "redis",
+    redisUrl: process.env.REDIS_URL || "redis://localhost:6379",
+    redisKeyPrefix: "rate_limit:",
+  },
+  maxRequests: 5, // Allow 5 requests
+  windowMs: 60, // per 60 seconds
+  includeHeaders: true,
+  errorMessage: "Rate limit exceeded. Please try again later.",
+  statusCode: 429,
+});
+
+// Use MongoDB rate limiter for this example
+const rateLimiter = rateLimiterMongo;
 
 // Apply rate limiting middleware
 app.use(rateLimiter.middleware());

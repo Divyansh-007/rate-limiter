@@ -13,10 +13,13 @@ describe("RateLimiterService", () => {
 
   beforeEach(() => {
     rateLimiter = new RateLimiterService({
-      mongoUrl: testMongoUrl,
+      cacheProvider: {
+        type: "mongodb",
+        mongoUrl: testMongoUrl,
+        collectionName: "testRateLimitingLogs",
+      },
       maxRequests: 3,
       windowMs: 60,
-      collectionName: "testRateLimitingLogs",
     });
   });
 
@@ -27,10 +30,10 @@ describe("RateLimiterService", () => {
   describe("initialization", () => {
     it("should initialize with correct configuration", () => {
       const config = rateLimiter.getConfig();
-      expect(config.mongoUrl).toBe(testMongoUrl);
+      expect(config.cacheProvider.mongoUrl).toBe(testMongoUrl);
       expect(config.maxRequests).toBe(3);
       expect(config.windowMs).toBe(60);
-      expect(config.collectionName).toBe("testRateLimitingLogs");
+      expect(config.cacheProvider.collectionName).toBe("testRateLimitingLogs");
     });
   });
 

@@ -15,7 +15,11 @@ import {
 export class RateLimitGuard extends NestJSRateLimiterGuard {
   constructor() {
     super({
-      mongoUrl: "mongodb://localhost:27017/rate-limiter-nestjs",
+      cacheProvider: {
+        type: "mongodb",
+        mongoUrl: "mongodb://localhost:27017/rate-limiter-nestjs",
+        collectionName: "rateLimitingLogs",
+      },
       maxRequests: 2,
       windowMs: 60,
     });
@@ -26,7 +30,11 @@ export class RateLimitGuard extends NestJSRateLimiterGuard {
 export class RateLimitInterceptor extends NestJSRateLimiterInterceptor {
   constructor() {
     super({
-      mongoUrl: "mongodb://localhost:27017/rate-limiter-nestjs",
+      cacheProvider: {
+        type: "redis",
+        redisUrl: "redis://localhost:6379",
+        redisKeyPrefix: "rate_limit:",
+      },
       maxRequests: 2,
       windowMs: 60,
     });

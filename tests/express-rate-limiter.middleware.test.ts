@@ -11,10 +11,13 @@ describe("ExpressRateLimiterMiddleware", () => {
   beforeEach(() => {
     app = express();
     rateLimiter = new ExpressRateLimiterMiddleware({
-      mongoUrl: testMongoUrl,
+      cacheProvider: {
+        type: "mongodb",
+        mongoUrl: testMongoUrl,
+        collectionName: "testRateLimitingLogsMW",
+      },
       maxRequests: 2,
       windowMs: 60,
-      collectionName: "testRateLimitingLogsMW",
       includeHeaders: true,
     });
     app.use(rateLimiter.middleware());

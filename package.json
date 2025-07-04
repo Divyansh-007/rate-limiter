@@ -1,6 +1,6 @@
 {
   "name": "@developers-joyride/rate-limiter",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A flexible rate limiting library with TypeScript support, Express middleware, and NestJS guard/interceptor capabilities",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -46,7 +46,8 @@
   },
   "dependencies": {
     "express": ">=4.0.0",
-    "mongoose": "^8.14.1"
+    "mongoose": "^8.14.1",
+    "redis": "^4.6.13"
   },
   "peerDependencies": {
     "express": ">=4.0.0"
